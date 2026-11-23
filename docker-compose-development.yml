@@ -17,7 +17,7 @@ services:
     image: ghcr.io/ewancoder/kartman-api:develop
     container_name: dev-kartman-api
     volumes:
-      - /data/dev-kartman/cache:/app/cache
+      - /data/tyr/dev/kartman/data:/app/data
     restart: unless-stopped
     mem_limit: 200m
     mem_reservation: 100m

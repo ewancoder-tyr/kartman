@@ -47,22 +47,29 @@ public sealed class HistoryDataCollectorService : IHostedService
     private bool _dayEnded = false;
     private readonly ILogger<HistoryDataCollectorService> _logger;
     private readonly HashSet<ComparisonEntry> _cache = [];
+    private readonly string _dataDir;
+    private readonly string _stateFilePath;
 
     public HistoryDataCollectorService(
         IHttpClientFactory httpClientFactory,
         HistoryDataRepository repository,
-        ILogger<HistoryDataCollectorService> logger)
+        ILogger<HistoryDataCollectorService> logger,
+        IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
         _repository = repository;
         _logger = logger;
+        _dataDir = configuration["DataDir"] ?? "data";
+        _stateFilePath = Path.Combine(_dataDir, "cache");
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        if (File.Exists("cache"))
+        Directory.CreateDirectory(_dataDir);
+
+        if (File.Exists(_stateFilePath))
         {
-            var text = await File.ReadAllTextAsync("cache", cancellationToken);
+            var text = await File.ReadAllTextAsync(_stateFilePath, cancellationToken);
             var parts = text.Split("__");
             if (parts.Length == 4)
             {
@@ -153,7 +160,16 @@ public sealed class HistoryDataCollectorService : IHostedService
             }
             finally
             {
-                await File.WriteAllTextAsync("cache", $"{_previousHash}__{_lastTelemetryRecordedAtUtc.Ticks}__{_dayEnded}__{_lastSession}");
+                try
+                {
+                    var tempFilePath = _stateFilePath + ".tmp";
+                    await File.WriteAllTextAsync(tempFilePath, $"{_previousHash}__{_lastTelemetryRecordedAtUtc.Ticks}__{_dayEnded}__{_lastSession}");
+                    File.Move(tempFilePath, _stateFilePath, overwrite: true);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(exception, "Failed to write collector state to {StateFilePath}", _stateFilePath);
+                }
             }
 
             static decimal ParseTime(string time)

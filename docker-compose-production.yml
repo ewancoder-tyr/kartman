@@ -4,6 +4,7 @@ networks:
   default:
     name: typingrealm
     external: true
+  egress: # For the internet access.
 
 services:
   kartman-web:
@@ -17,12 +18,15 @@ services:
     image: ghcr.io/ewancoder/kartman-api:main
     container_name: kartman-api
     volumes:
-      - /data/kartman/cache:/app/cache
+      - /data/tyr/prod/kartman/data:/app/data
     restart: unless-stopped
     mem_limit: 1g
     mem_reservation: 750m
     env_file:
-      - /data/kartman/secrets.env
+      - /data/tyr/prod/kartman/secrets.env
+    networks:
+      - default
+      - egress
 
   kartman-postgres:
     image: postgres:16
@@ -30,9 +34,9 @@ services:
     ports:
       - 10232:5432 # Port shouldn't be exposed in production.
     volumes:
-      - /data/kartman/postgres:/var/lib/postgresql/data
+      - /data/tyr/prod/kartman/postgres:/var/lib/postgresql/data
     restart: unless-stopped
     mem_limit: 1g
     mem_reservation: 750m
     env_file:
-      - /data/kartman/secrets.env
+      - /data/tyr/prod/kartman/secrets.env

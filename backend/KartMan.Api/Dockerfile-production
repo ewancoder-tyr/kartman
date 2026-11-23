@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data
 USER app
 WORKDIR /app
 EXPOSE 8080
