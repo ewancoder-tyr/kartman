@@ -31,8 +31,8 @@ services:
   kartman-postgres:
     image: postgres:16
     container_name: kartman-postgres
-    ports:
-      - 10232:5432 # Port shouldn't be exposed in production.
+    #ports:
+      #- 10232:5432 # Port shouldn't be exposed in production.
     volumes:
       - /data/tyr/prod/kartman/postgres:/var/lib/postgresql/data
     restart: unless-stopped
