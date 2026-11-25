@@ -85,7 +85,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/ewancoder/kartman-api
+        images: ${{ env.REGISTRY }}/ewancoder-tyr/kartman-api
         tags: |
           type=ref,event=branch
           type=sha,format=long,prefix=sha-{{branch}}-
@@ -163,7 +163,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/ewancoder/kartman-web
+        images: ${{ env.REGISTRY }}/ewancoder-tyr/kartman-web
         tags: |
           type=ref,event=branch
           type=sha,format=long,prefix=sha-{{branch}}-
@@ -206,7 +206,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          curl https://raw.githubusercontent.com/ewancoder/kartman/main/docker-compose-production.yml > /tmp/kartman-docker-compose.yml
+          curl https://raw.githubusercontent.com/ewancoder-tyr/kartman/main/docker-compose-production.yml > /tmp/kartman-docker-compose.yml
           docker compose -f /tmp/kartman-docker-compose.yml pull
           docker compose -f /tmp/kartman-docker-compose.yml up -d
 
@@ -228,6 +228,6 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          curl https://raw.githubusercontent.com/ewancoder/kartman/develop/docker-compose-development.yml > /tmp/dev-kartman-docker-compose.yml
+          curl https://raw.githubusercontent.com/ewancoder-tyr/kartman/develop/docker-compose-development.yml > /tmp/dev-kartman-docker-compose.yml
           docker compose -f /tmp/dev-kartman-docker-compose.yml pull
           docker compose -f /tmp/dev-kartman-docker-compose.yml up -d
