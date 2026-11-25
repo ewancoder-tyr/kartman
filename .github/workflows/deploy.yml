@@ -54,7 +54,7 @@ jobs:
       if: '!cancelled()'
       with:
         auth: ${{ secrets.GIST_SECRET }}
-        gistID: ${{ secrets.GIST_ID }}
+        gistID: 0184962696ef0364be7a3f491133f2f9
         filename: kartman-api-coverage-${{ github.ref_name }}.json
         label: API Coverage
         message: ${{ env.COVERAGE }}%
@@ -132,7 +132,7 @@ jobs:
       if: '!cancelled()'
       with:
         auth: ${{ secrets.GIST_SECRET }}
-        gistID: ${{ secrets.GIST_ID }}
+        gistID: 0184962696ef0364be7a3f491133f2f9
         filename: kartman-web-ui-coverage-${{ github.ref_name }}.json
         label: Web UI Coverage
         message: ${{ env.COVERAGE }}%
