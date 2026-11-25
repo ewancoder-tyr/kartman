@@ -192,42 +192,16 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: [build-api, build-web-ui]
-
-    permissions:
-      contents: read
+    permissions: {}
 
     steps:
-    - name: Deploy to DO
-      uses: appleboy/ssh-action@v1.0.3
+    - name: Deploy to production
+      uses: appleboy/ssh-action@v1.2.2
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        passphrase: ${{ secrets.PASSWORD }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          curl https://raw.githubusercontent.com/ewancoder-tyr/kartman/main/docker-compose-production.yml > /tmp/kartman-docker-compose.yml
-          docker compose -f /tmp/kartman-docker-compose.yml pull
-          docker compose -f /tmp/kartman-docker-compose.yml up -d
-
-  deploy-dev:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-    needs: [build-api, build-web-ui]
-
-    permissions:
-      contents: read
-
-    steps:
-    - name: Deploy DEV to DO
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        passphrase: ${{ secrets.PASSWORD }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        script: |
-          curl https://raw.githubusercontent.com/ewancoder-tyr/kartman/develop/docker-compose-development.yml > /tmp/dev-kartman-docker-compose.yml
-          docker compose -f /tmp/dev-kartman-docker-compose.yml pull
-          docker compose -f /tmp/dev-kartman-docker-compose.yml up -d
+        host: ${{ secrets.SSH_HOST }}
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+        fingerprint: ${{ secrets.SSH_FINGERPRINT }}
+        username: tyr-deploy
+        script: kartman prod ${{ github.sha }}
