@@ -8,14 +8,14 @@ networks:
 
 services:
   kartman-web:
-    image: ghcr.io/ewancoder/kartman-web:${TAG:?}
+    image: ghcr.io/ewancoder-tyr/kartman-web:${TAG:?}
     container_name: kartman-web
     restart: unless-stopped
     mem_limit: 1g
     mem_reservation: 750m
 
   kartman-api:
-    image: ghcr.io/ewancoder/kartman-api:${TAG:?}
+    image: ghcr.io/ewancoder-tyr/kartman-api:${TAG:?}
     container_name: kartman-api
     volumes:
       - /data/tyr/prod/kartman/data:/app/data
