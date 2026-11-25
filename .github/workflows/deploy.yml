@@ -86,6 +86,9 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ${{ env.REGISTRY }}/ewancoder/kartman-api
+        tags: |
+          type=ref,event=branch
+          type=sha,format=long,prefix=sha-{{branch}}-
 
     - name: Build and push API Docker image
       id: push
@@ -161,6 +164,9 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ${{ env.REGISTRY }}/ewancoder/kartman-web
+        tags: |
+          type=ref,event=branch
+          type=sha,format=long,prefix=sha-{{branch}}-
 
     - name: Build and push Production API Docker image
       if: github.ref == 'refs/heads/main'
